@@ -7,8 +7,10 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.bankingapp.data.local.dao.UserDao
+import com.bankingapp.data.local.toEntity
+import com.bankingapp.data.local.toUser
 import com.bankingapp.data.model.User
-import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -20,13 +22,13 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 @Singleton
 class UserPreferencesRepository @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val gson: Gson
+    private val userDao: UserDao
 ) {
     private val dataStore = context.dataStore
 
     companion object {
         val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
-        val USER_DATA = stringPreferencesKey("user_data")
+        val CURRENT_USER_ID = stringPreferencesKey("current_user_id")
         val IS_DARK_MODE = booleanPreferencesKey("is_dark_mode")
         val HAS_PIN = booleanPreferencesKey("has_pin")
     }
@@ -39,26 +41,30 @@ class UserPreferencesRepository @Inject constructor(
         preferences[IS_DARK_MODE] ?: false
     }
 
-    val currentUser: Flow<User?> = dataStore.data.map { preferences ->
-        preferences[USER_DATA]?.let { json ->
-            gson.fromJson(json, User::class.java)
-        }
-    }
+    // Get current user from Room database
+    val currentUser: Flow<User?> = userDao.getCurrentUser().map { it?.toUser() }
 
     val hasPin: Flow<Boolean> = dataStore.data.map { preferences ->
         preferences[HAS_PIN] ?: false
     }
 
     suspend fun saveUser(user: User) {
+        // Save to Room database
+        userDao.insertUser(user.toEntity())
+
+        // Save user ID and login state to DataStore
         dataStore.edit { preferences ->
-            preferences[USER_DATA] = gson.toJson(user)
+            preferences[CURRENT_USER_ID] = user.id
             preferences[IS_LOGGED_IN] = true
             preferences[HAS_PIN] = user.pin != null
         }
     }
 
     suspend fun updateUser(user: User) {
-        saveUser(user)
+        userDao.updateUser(user.toEntity())
+        dataStore.edit { preferences ->
+            preferences[HAS_PIN] = user.pin != null
+        }
     }
 
     suspend fun setDarkMode(enabled: Boolean) {
@@ -71,5 +77,6 @@ class UserPreferencesRepository @Inject constructor(
         dataStore.edit { preferences ->
             preferences.clear()
         }
+        // Note: We keep the user data in Room for future logins
     }
 }

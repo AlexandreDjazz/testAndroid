@@ -19,6 +19,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onNavigateToSecurity: () -> Unit,
+    onNavigateToNotifications: () -> Unit,
+    onNavigateToHelp: () -> Unit,
     onLogout: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
@@ -166,7 +169,7 @@ fun SettingsScreen(
                         icon = Icons.Default.Lock,
                         title = "Security",
                         subtitle = "Change PIN and security settings",
-                        onClick = { /* TODO */ }
+                        onClick = onNavigateToSecurity
                     )
 
                     Divider()
@@ -175,7 +178,7 @@ fun SettingsScreen(
                         icon = Icons.Default.Notifications,
                         title = "Notifications",
                         subtitle = "Manage notification preferences",
-                        onClick = { /* TODO */ }
+                        onClick = onNavigateToNotifications
                     )
 
                     Divider()
@@ -184,7 +187,7 @@ fun SettingsScreen(
                         icon = Icons.Default.Help,
                         title = "Help & Support",
                         subtitle = "Get help with your account",
-                        onClick = { /* TODO */ }
+                        onClick = onNavigateToHelp
                     )
                 }
             }

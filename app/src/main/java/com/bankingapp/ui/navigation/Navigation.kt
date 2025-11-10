@@ -11,10 +11,13 @@ import androidx.navigation.compose.rememberNavController
 import com.bankingapp.ui.screens.auth.LoginScreen
 import com.bankingapp.ui.screens.auth.SignupScreen
 import com.bankingapp.ui.screens.budget.BudgetScreen
+import com.bankingapp.ui.screens.help.HelpSupportScreen
 import com.bankingapp.ui.screens.home.HomeScreen
 import com.bankingapp.ui.screens.map.ATMMapScreen
+import com.bankingapp.ui.screens.notifications.NotificationsScreen
 import com.bankingapp.ui.screens.payment.PaymentScreen
 import com.bankingapp.ui.screens.pin.PinScreen
+import com.bankingapp.ui.screens.security.SecurityScreen
 import com.bankingapp.ui.screens.settings.SettingsScreen
 import com.bankingapp.ui.screens.MainViewModel
 
@@ -27,6 +30,9 @@ sealed class Screen(val route: String) {
     object Budget : Screen("budget")
     object ATMMap : Screen("atm_map")
     object Settings : Screen("settings")
+    object Security : Screen("security")
+    object Notifications : Screen("notifications")
+    object HelpSupport : Screen("help_support")
 }
 
 @Composable
@@ -132,10 +138,46 @@ fun BankingNavigation(
                 onBack = {
                     navController.popBackStack()
                 },
+                onNavigateToSecurity = {
+                    navController.navigate(Screen.Security.route)
+                },
+                onNavigateToNotifications = {
+                    navController.navigate(Screen.Notifications.route)
+                },
+                onNavigateToHelp = {
+                    navController.navigate(Screen.HelpSupport.route)
+                },
                 onLogout = {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(0) { inclusive = true }
                     }
+                }
+            )
+        }
+
+        composable(Screen.Security.route) {
+            SecurityScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onChangePIN = {
+                    navController.navigate(Screen.Pin.route)
+                }
+            )
+        }
+
+        composable(Screen.Notifications.route) {
+            NotificationsScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Screen.HelpSupport.route) {
+            HelpSupportScreen(
+                onBack = {
+                    navController.popBackStack()
                 }
             )
         }
