@@ -20,7 +20,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_GOOGLE_MAPS_API_KEY" />
+            android:value="AIzaSyD40k9v1xXVBfrS6OazXj8qR-ZUIVIZ1j8" />
 
         <activity
             android:name=".MainActivity"

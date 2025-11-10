@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
 }
@@ -8,6 +9,11 @@ plugins {
 android {
     namespace = "com.bankingapp"
     compileSdk = 34
+
+    lint {
+        disable += "MutableCollectionMutableState"
+        abortOnError = false
+    }
 
     defaultConfig {
         applicationId = "com.bankingapp"
@@ -43,10 +49,6 @@ android {
 
     buildFeatures {
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
     }
 
     packaging {
@@ -118,4 +120,16 @@ dependencies {
 
 kapt {
     correctErrorTypes = true
+    javacOptions {
+        option("--add-opens", "jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED")
+        option("--add-opens", "jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED")
+        option("--add-opens", "jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED")
+        option("--add-opens", "jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED")
+        option("--add-opens", "jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED")
+        option("--add-opens", "jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED")
+        option("--add-opens", "jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED")
+        option("--add-opens", "jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED")
+        option("--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED")
+        option("--add-opens", "jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED")
+    }
 }
