@@ -85,12 +85,6 @@ dependencies {
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-    // Charts
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-    implementation("com.patrykandpatrick.vico:compose:1.13.1")
-    implementation("com.patrykandpatrick.vico:compose-m3:1.13.1")
-    implementation("com.patrykandpatrick.vico:core:1.13.1")
-
     // Google Maps
     implementation("com.google.maps.android:maps-compose:4.3.0")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
